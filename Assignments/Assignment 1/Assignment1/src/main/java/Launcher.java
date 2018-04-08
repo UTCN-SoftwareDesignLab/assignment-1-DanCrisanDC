@@ -23,8 +23,8 @@ public class Launcher {
     public static void main(String[] args) {
         Connection connection = new DBConnectionFactory().getConnectionWrapper(false).getConnection();
         ComponentFactory componentFactory = ComponentFactory.instance(false);
-        LoginView loginView = new LoginView();
-        new LoginController(loginView, componentFactory.getAuthenticationService(),
+
+        new LoginController(new LoginView(), componentFactory.getAuthenticationService(),
                             new AdminController(new AdminView(),
                                                 new UserRepositoryMySQL(connection),
                                                 new AdminServices(new UserRepositoryMySQL(connection)),
@@ -34,8 +34,7 @@ public class Launcher {
                             new EmployeeController(new EmployeeView(),
                                                    new AccountServiceImpl(new AccountRepositoryMySQL(connection)),
                                                    new ClientServiceImpl(new ClientRepositoryMySQL(connection)),
-                                                   new ReportServiceImpl(new ReportRepositoryMySQL(connection)),
-                                                   loginView),
+                                                   new ReportServiceImpl(new ReportRepositoryMySQL(connection))),
                             new UserRepositoryMySQL(connection));
     }
 }

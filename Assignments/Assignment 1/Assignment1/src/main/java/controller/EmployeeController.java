@@ -11,7 +11,6 @@ import service.account.AccountServiceImpl;
 import service.client.ClientServiceImpl;
 import service.report.ReportServiceImpl;
 import view.EmployeeView;
-import view.LoginView;
 
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
@@ -24,10 +23,9 @@ public class EmployeeController {
     private AccountServiceImpl accountService;
     private ClientServiceImpl clientService;
     private ReportServiceImpl reportService;
-    private LoginView loginView;
     private int idE;
 
-    public EmployeeController(EmployeeView employeeView, AccountServiceImpl accountService, ClientServiceImpl clientService, ReportServiceImpl reportService, LoginView loginView) {
+    public EmployeeController(EmployeeView employeeView, AccountServiceImpl accountService, ClientServiceImpl clientService, ReportServiceImpl reportService) {
 
         this.employeeView = employeeView;
         this.employeeView.setVisible(false);
@@ -46,7 +44,6 @@ public class EmployeeController {
         this.accountService = accountService;
         this.clientService = clientService;
         this.reportService = reportService;
-        this.loginView = loginView;
     }
 
     public void setVisible(boolean b) {
