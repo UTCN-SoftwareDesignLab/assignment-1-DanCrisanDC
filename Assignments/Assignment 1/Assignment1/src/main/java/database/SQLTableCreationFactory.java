@@ -8,13 +8,24 @@ public class SQLTableCreationFactory {
 
     public String getCreateSQLForTable(String table) {
         switch (table) {
+            case REPORT:
+                return "CREATE TABLE IF NOT EXISTS report (" +
+                        "  id int(11) NOT NULL AUTO_INCREMENT," +
+                        "  idE int(15) NOT NULL," +
+                        "  date datetime NULL," +
+                        "  activity varchar(500) NOT NULL," +
+                        "  PRIMARY KEY (id)," +
+                        "  UNIQUE KEY id_UNIQUE (id)" +
+                        ") ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;";
+
             case ACCOUNT:
                 return "CREATE TABLE IF NOT EXISTS account (" +
-                        "  id int(11) NOT NULL AUTO_INCREMENT," +
+                        "  id int(100) NOT NULL AUTO_INCREMENT," +
                         "  idNo int(15) NOT NULL," +
                         "  type varchar(500) NOT NULL," +
                         "  amount int(10) NOT NULL," +
                         "  dateOfCreation datetime DEFAULT NULL," +
+                        "  idClient int(100) NOT NULL," +
                         "  PRIMARY KEY (id)," +
                         "  UNIQUE KEY id_UNIQUE (id)" +
                         ") ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;";

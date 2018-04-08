@@ -1,19 +1,19 @@
 package repository;
 
 public class EntityNotFoundException extends Exception {
-    private Long entityId;
+    private int entityId;
     private String entityClass;
 
-    public EntityNotFoundException(Long entityId, String entityClass) {
+    public EntityNotFoundException(int entityId, String entityClass) {
         this.entityId = entityId;
         this.entityClass = entityClass;
     }
 
-    public Long getEntityId() {
+    public int getEntityId() {
         return entityId;
     }
 
-    public void setEntityId(Long entityId) {
+    public void setEntityId(int entityId) {
         this.entityId = entityId;
     }
 

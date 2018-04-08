@@ -1,14 +1,20 @@
 package model;
 
-import java.util.List;
-
 public class Client {
 
+    private int id;
     private String name;
     private long idCardNo;
     private String address;
     private String CNP;
-    private List<Account> accountList;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
 
     public void setIdCardNo(long idCardNo) {
         this.idCardNo = idCardNo;

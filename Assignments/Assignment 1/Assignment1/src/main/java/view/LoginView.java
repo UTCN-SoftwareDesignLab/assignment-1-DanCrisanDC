@@ -11,6 +11,7 @@ public class LoginView extends JFrame{
     private JTextField tfPassword;
     private JButton btnLogin;
     private JButton btnRegister;
+    private JRadioButton btnAdmin;
 
     public LoginView() throws HeadlessException {
         setSize(300, 300);
@@ -21,15 +22,17 @@ public class LoginView extends JFrame{
         add(tfPassword);
         add(btnLogin);
         add(btnRegister);
+        add(btnAdmin);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
     private void initializeFields() {
-        tfUsername = new JTextField();
-        tfPassword = new JTextField();
+        tfUsername = new JTextField("");
+        tfPassword = new JTextField("");
         btnLogin = new JButton("Login");
         btnRegister = new JButton("Register");
+        btnAdmin = new JRadioButton("Admin");
     }
 
     public String getUsername() {
@@ -40,11 +43,19 @@ public class LoginView extends JFrame{
         return tfPassword.getText();
     }
 
+    public void setAdminButtonListener(ActionListener adminButtonListener) {
+        btnAdmin.addActionListener(adminButtonListener);
+    }
+
     public void setLoginButtonListener(ActionListener loginButtonListener) {
         btnLogin.addActionListener(loginButtonListener);
     }
 
     public void setRegisterButtonListener(ActionListener registerButtonListener) {
         btnRegister.addActionListener(registerButtonListener);
+    }
+
+    public boolean getRadioButtonStatus() {
+        return btnAdmin.isSelected();
     }
 }

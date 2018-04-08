@@ -8,6 +8,7 @@ public class JDBConnectionWrapper {
 
     private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://localhost/";
+    private static final String USE_SSL_FALSE = "?useSSL=false";
 
     private static final String USER = "root";
     private static final String PASS = "Phystick97";
@@ -18,7 +19,7 @@ public class JDBConnectionWrapper {
     public JDBConnectionWrapper(String schema) {
         try {
             Class.forName(JDBC_DRIVER);
-            connection = DriverManager.getConnection(DB_URL + schema, USER, PASS);
+            connection = DriverManager.getConnection(DB_URL + schema + USE_SSL_FALSE, USER, PASS);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }

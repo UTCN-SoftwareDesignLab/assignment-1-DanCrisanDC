@@ -10,6 +10,11 @@ public class ClientBuilder {
         client = new Client();
     }
 
+    public ClientBuilder setId(int id) {
+        client.setId(id);
+        return this;
+    }
+
     public ClientBuilder setName(String name) {
         client.setName(name);
         return this;

@@ -33,7 +33,7 @@ public class UserValidator {
 
     private void validateUsername(String username) {
         if (!Pattern.compile(USER_VALIDATION_REGEX).matcher(username).matches()) {
-            errors.add("Invalid email!");
+            errors.add("Invalid user!");
         }
     }
 

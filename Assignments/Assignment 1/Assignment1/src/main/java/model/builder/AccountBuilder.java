@@ -2,7 +2,7 @@ package model.builder;
 
 import model.Account;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class AccountBuilder {
 
@@ -10,6 +10,11 @@ public class AccountBuilder {
 
     public AccountBuilder() {
         account = new Account();
+    }
+
+    public AccountBuilder setId(int id) {
+        account.setId(id);
+        return this;
     }
 
     public AccountBuilder setIdNo(long idNo) {
@@ -29,6 +34,11 @@ public class AccountBuilder {
 
     public AccountBuilder setDateOfCreation(Date dateOfCreation) {
         account.setDateOfCreation(dateOfCreation);
+        return this;
+    }
+
+    public AccountBuilder setIdClient(int idClient) {
+        account.setIdClient(idClient);
         return this;
     }
 

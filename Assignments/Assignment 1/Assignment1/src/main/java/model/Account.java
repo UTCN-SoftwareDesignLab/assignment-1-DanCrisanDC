@@ -1,13 +1,19 @@
 package model;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Account {
 
+    private int id;
     private long idNo;
     private String type; // use enum preferably
     private int amount;
     private Date dateOfCreation;
+    private int idClient;
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 
     public long getIdNo() {
         return idNo;
@@ -39,5 +45,13 @@ public class Account {
 
     public void setDateOfCreation(Date dateOfCreation) {
         this.dateOfCreation = dateOfCreation;
+    }
+
+    public int getIdClient() {
+        return idClient;
+    }
+
+    public void setIdClient(int idClient) {
+        this.idClient = idClient;
     }
 }

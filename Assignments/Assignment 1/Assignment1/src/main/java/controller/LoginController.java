@@ -2,9 +2,10 @@ package controller;
 
 import model.User;
 import model.validation.Notification;
-import view.LoginView;
-import service.AuthenticationService;
 import repository.user.AuthenticationException;
+import repository.user.UserRepositoryMySQL;
+import service.user.AuthenticationService;
+import view.LoginView;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,12 +14,21 @@ import java.awt.event.ActionListener;
 public class LoginController {
     private final LoginView loginView;
     private final AuthenticationService authenticationService;
+    private EmployeeController employeeController;
+    private AdminController adminController;
+    private UserRepositoryMySQL userRepositoryMySQL;
 
-    public LoginController(LoginView loginView, AuthenticationService authenticationService) {
+    public LoginController(LoginView loginView, AuthenticationService authenticationService, AdminController adminController, EmployeeController employeeController, UserRepositoryMySQL userRepositoryMySQL) {
         this.loginView = loginView;
         this.authenticationService = authenticationService;
+
         loginView.setLoginButtonListener(new LoginButtonListener());
         loginView.setRegisterButtonListener(new RegisterButtonListener());
+
+        this.adminController = adminController;
+        adminController.setVisible(false);
+        this.employeeController = employeeController;
+        this.userRepositoryMySQL = userRepositoryMySQL;
     }
 
     private class LoginButtonListener implements ActionListener {
@@ -27,10 +37,10 @@ public class LoginController {
         public void actionPerformed(ActionEvent e) {
             String username = loginView.getUsername();
             String password = loginView.getPassword();
-
             Notification<User> loginNotification = null;
             try {
                 loginNotification = authenticationService.login(username, password);
+                employeeController.setIdE(userRepositoryMySQL.findByUsernameAndPassword(username, authenticationService.encodePassword(password)).getResult().getId());
             } catch (AuthenticationException e1) {
                 e1.printStackTrace();
             }
@@ -39,7 +49,13 @@ public class LoginController {
                 if (loginNotification.hasErrors()) {
                     JOptionPane.showMessageDialog(loginView.getContentPane(), loginNotification.getFormattedErrors());
                 } else {
-                    JOptionPane.showMessageDialog(loginView.getContentPane(), "Login successful!");
+
+                    User user = loginNotification.getResult();
+                    if (loginView.getRadioButtonStatus() && isAdmin() == true) {
+                        adminController.setVisible(true);
+                    } else {
+                        employeeController.setVisible(true);
+                    }
                 }
             }
         }
@@ -60,13 +76,16 @@ public class LoginController {
                     JOptionPane.showMessageDialog(loginView.getContentPane(), "Registration not successful, please try again later.");
                 } else {
                     JOptionPane.showMessageDialog(loginView.getContentPane(), "Registration successful!");
+                    adminController.updateTable();
                 }
             }
         }
     }
 
-    //private class AdminButtonListener implements ActionListener {
-
-    //}
-
+    private boolean isAdmin() {
+        if(loginView.getUsername().equals("dancrisan") && loginView.getPassword().equals("parola123#"))
+            return true;
+        else
+            return false;
+    }
 }

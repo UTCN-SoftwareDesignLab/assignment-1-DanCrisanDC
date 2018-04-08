@@ -3,8 +3,8 @@ import repository.security.RightsRolesRepository;
 import repository.security.RightsRolesRepositoryMySQL;
 import repository.user.UserRepository;
 import repository.user.UserRepositoryMySQL;
-import service.AuthenticationService;
-import service.AuthenticationServiceMySQL;
+import service.user.AuthenticationService;
+import service.user.AuthenticationServiceMySQL;
 
 import java.sql.Connection;
 
@@ -26,7 +26,7 @@ public class ComponentFactory {
     private ComponentFactory(Boolean componentsForTests) {
         Connection connection = new DBConnectionFactory().getConnectionWrapper(componentsForTests).getConnection();
         this.rightsRolesRepository = new RightsRolesRepositoryMySQL(connection);
-        this.userRepository = new UserRepositoryMySQL(connection, rightsRolesRepository);
+        this.userRepository = new UserRepositoryMySQL(connection);
         this.authenticationService = new AuthenticationServiceMySQL(this.userRepository, this.rightsRolesRepository);
     }
 

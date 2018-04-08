@@ -4,16 +4,16 @@ import java.util.List;
 
 public class User {
 
-    private Long id;
+    private int id;
     private String username;
     private String password;
     private List<Role> roles;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -39,5 +39,10 @@ public class User {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "User id " + id + " with name " + username + " and pass " + password;
     }
 }
