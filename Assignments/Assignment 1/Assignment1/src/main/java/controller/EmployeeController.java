@@ -1,31 +1,27 @@
 package controller;
 
-import database.JDBConnectionWrapper;
 import model.Account;
 import model.Client;
 import model.builder.AccountBuilder;
 import model.builder.ClientBuilder;
-import repository.account.AccountRepositoryMySQL;
-import repository.client.ClientRepositoryMySQL;
-import service.account.AccountServiceImpl;
-import service.client.ClientServiceImpl;
-import service.report.ReportServiceImpl;
+import service.account.AccountService;
+import service.client.ClientService;
+import service.report.ReportService;
 import view.EmployeeView;
 
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
 import java.sql.Date;
 
 public class EmployeeController {
     private final EmployeeView employeeView;
-    private AccountServiceImpl accountService;
-    private ClientServiceImpl clientService;
-    private ReportServiceImpl reportService;
-    private int idE;
+    private final AccountService accountService;
+    private final ClientService clientService;
+    private final ReportService reportService;
+    private int idEmployee;
 
-    public EmployeeController(EmployeeView employeeView, AccountServiceImpl accountService, ClientServiceImpl clientService, ReportServiceImpl reportService) {
+    public EmployeeController(EmployeeView employeeView, AccountService accountService, ClientService clientService, ReportService reportService) {
 
         this.employeeView = employeeView;
         this.employeeView.setVisible(false);
@@ -51,12 +47,12 @@ public class EmployeeController {
 
     }
 
-    public int getIdE() {
-        return idE;
+    public int getIdEmployee() {
+        return idEmployee;
     }
 
-    public void setIdE(int idE) {
-        this.idE = idE;
+    public void setIdEmployee(int idEmployee) {
+        this.idEmployee = idEmployee;
     }
 
     private class CreateAccountButtonListener implements ActionListener {
@@ -71,9 +67,9 @@ public class EmployeeController {
 
             accountService.create(Long.parseLong(cardNo), type, Integer.parseInt(amount), null, Integer.parseInt(clientId));
 
-            updateModel();
+            updateAccountTable();
 
-            reportService.addR(getIdE(), new Date(System.currentTimeMillis()), "Created account.");
+            reportService.addReport(getIdEmployee(), new Date(System.currentTimeMillis()), "Created account.");
         }
     }
 
@@ -81,7 +77,7 @@ public class EmployeeController {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            Account account = getClicked();
+            Account account = getAccountFromTable();
             String cardNo = employeeView.getIdNoTxt();
             String type = employeeView.getTypeTxt();
             String amount = employeeView.getAmountTxt();
@@ -89,9 +85,9 @@ public class EmployeeController {
             String clientId = employeeView.getIdClientTxt();
             accountService.update( account.getId(), Long.parseLong(cardNo), type, Integer.parseInt(amount), null, Integer.parseInt(clientId));
 
-            updateModel();
+            updateAccountTable();
 
-            reportService.addR(getIdE(), new Date(System.currentTimeMillis()), "Updated account.");
+            reportService.addReport(getIdEmployee(), new Date(System.currentTimeMillis()), "Updated account.");
         }
     }
 
@@ -99,9 +95,9 @@ public class EmployeeController {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            accountService.remove(getClicked().getId());
-            updateModel();
-            reportService.addR(getIdE(), new Date(System.currentTimeMillis()), "Deleted account.");
+            accountService.remove(getAccountFromTable().getId());
+            updateAccountTable();
+            reportService.addReport(getIdEmployee(), new Date(System.currentTimeMillis()), "Deleted account.");
         }
     }
 
@@ -115,9 +111,9 @@ public class EmployeeController {
 
             clientService.create(name, Long.parseLong(cardId), address, CNP);
 
-            updateModel2();
+            updateClientTable();
 
-            reportService.addR(getIdE(), new Date(System.currentTimeMillis()), "Created client.");
+            reportService.addReport(getIdEmployee(), new Date(System.currentTimeMillis()), "Created client.");
         }
     }
 
@@ -125,7 +121,7 @@ public class EmployeeController {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            Client client = getClicked2();
+            Client client = getClientFromTable();
 
             String name = employeeView.getNameTxt();
             String cardId = employeeView.getIdCardTxt();
@@ -134,9 +130,9 @@ public class EmployeeController {
 
             clientService.update(client.getId(), name, Long.parseLong(cardId), address, CNP);
 
-            updateModel2();
+            updateClientTable();
 
-            reportService.addR(getIdE(), new Date(System.currentTimeMillis()), "Updated client.");
+            reportService.addReport(getIdEmployee(), new Date(System.currentTimeMillis()), "Updated client.");
         }
     }
 
@@ -144,20 +140,16 @@ public class EmployeeController {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            Connection connection = new JDBConnectionWrapper("asg1").getConnection();
-
-            AccountRepositoryMySQL ac;
-            ac = new AccountRepositoryMySQL(connection);
-            for (Account a : ac.findAll()) {
-                if(a.getIdClient() == getClicked2().getId())
+            for (Account a : accountService.findAll()) {
+                if(a.getIdClient() == getClientFromTable().getId())
                     accountService.remove(a.getId());
             }
 
-            clientService.remove(getClicked2().getId());
-            updateModel();
-            updateModel2();
+            clientService.remove(getClientFromTable().getId());
+            updateAccountTable();
+            updateClientTable();
 
-            reportService.addR(getIdE(), new Date(System.currentTimeMillis()), "Deleted client with all its accounts.");
+            reportService.addReport(getIdEmployee(), new Date(System.currentTimeMillis()), "Deleted client with all its accounts.");
         }
     }
 
@@ -172,25 +164,25 @@ public class EmployeeController {
             accountService.update(a1.getId(),a1.getIdNo(),a1.getType(),a1.getAmount() - Integer.parseInt(employeeView.getSumTxt()), a1.getDateOfCreation(), a1.getIdClient());
             accountService.update(a2.getId(),a2.getIdNo(),a2.getType(),a2.getAmount() + Integer.parseInt(employeeView.getSumTxt()), a2.getDateOfCreation(), a2.getIdClient());
 
-            updateModel();
+            updateAccountTable();
 
-            reportService.addR(getIdE(), new Date(System.currentTimeMillis()), "Transfered money from " + a1.getId() + "th account to" + a2.getId());
+            reportService.addReport(getIdEmployee(), new Date(System.currentTimeMillis()), "Transfered money from " + a1.getId() + "th account to" + a2.getId());
         }
     }
 
     private class BillButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Account account = getClicked();
+            Account account = getAccountFromTable();
             accountService.update(account.getId(), account.getIdNo(), account.getType(), account.getAmount() - Integer.parseInt(employeeView.getProcessTxt()), account.getDateOfCreation(), account.getIdClient());
 
-            updateModel();
+            updateAccountTable();
 
-            reportService.addR(getIdE(), new Date(System.currentTimeMillis()), "Bills payed by client " + account.getIdClient());
+            reportService.addReport(getIdEmployee(), new Date(System.currentTimeMillis()), "Bills payed by client " + account.getIdClient());
         }
     }
 
-    public Client getClicked2() {
+    public Client getClientFromTable() {
 
         Integer id = (Integer) employeeView.getTableClients().getValueAt(employeeView.getTableClients().getSelectedRow(),0);
         String name = (String)  employeeView.getTableClients().getValueAt(employeeView.getTableClients().getSelectedRow(),1);
@@ -208,7 +200,7 @@ public class EmployeeController {
         return c;
     }
 
-    public Account getClicked() {
+    public Account getAccountFromTable() {
 
         Integer accountId = (Integer) employeeView.getTableAccounts().getValueAt(employeeView.getTableAccounts().getSelectedRow(),0);
         long cardNo = (long) employeeView.getTableAccounts().getValueAt(employeeView.getTableAccounts().getSelectedRow(),1);
@@ -229,7 +221,7 @@ public class EmployeeController {
         return a;
     }
 
-    public void updateModel(){
+    public void updateAccountTable(){
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("id");
         model.addColumn("card No.");
@@ -238,11 +230,7 @@ public class EmployeeController {
         model.addColumn("date of creation");
         model.addColumn("id client");
 
-        Connection connection = new JDBConnectionWrapper("asg1").getConnection();
-
-        AccountRepositoryMySQL ac;
-        ac = new AccountRepositoryMySQL(connection);
-        for (Account a : ac.findAll()) {
+        for (Account a : accountService.findAll()) {
             Object[] o = {a.getId(), a.getIdNo(), a.getType(), a.getAmount(), a.getDateOfCreation(), a.getIdClient()};
             model.addRow(o);
         }
@@ -250,7 +238,7 @@ public class EmployeeController {
         employeeView.getTableAccounts().setModel(model);
     }
 
-    public void updateModel2(){
+    public void updateClientTable(){
         DefaultTableModel model2 = new DefaultTableModel();
         model2.addColumn("id");
         model2.addColumn("name");
@@ -258,11 +246,7 @@ public class EmployeeController {
         model2.addColumn("address");
         model2.addColumn("CNP");
 
-        Connection connection = new JDBConnectionWrapper("asg1").getConnection();
-
-        ClientRepositoryMySQL cl;
-        cl = new ClientRepositoryMySQL(connection);
-        for (Client c : cl.findAll()) {
+        for (Client c : clientService.findAll()) {
             Object[] o = {c.getId(), c.getName(), c.getIdCardNo(), c.getAddress(), c.getCNP()};
             model2.addRow(o);
         }

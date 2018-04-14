@@ -3,7 +3,7 @@ package view;
 import database.JDBConnectionWrapper;
 import model.Report;
 import model.User;
-import repository.ReportRepositoryMySQL;
+import repository.Report.ReportRepositoryMySQL;
 import repository.user.UserRepository;
 import repository.user.UserRepositoryMySQL;
 
@@ -118,7 +118,7 @@ public class AdminView extends JFrame {
         for (Report report : r.findAll()) {
             try {
                 if(report.getDate().after(new SimpleDateFormat("yy-MM-dd").parse(fromTxt.getText())) && report.getDate().before(new SimpleDateFormat("yy-MM-dd").parse(untilTxt.getText()))) {
-                    Object[] o = {report.getId(), report.getIdE(), report.getDate(), report.getActivity()};
+                    Object[] o = {report.getId(), report.getIdEmployee(), report.getDate(), report.getActivity()};
                     model2.addRow(o);
                 }
             } catch (ParseException e) {

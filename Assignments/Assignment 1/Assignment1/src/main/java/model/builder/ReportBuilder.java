@@ -17,8 +17,8 @@ public class ReportBuilder {
         return this;
     }
 
-    public ReportBuilder setIdE(int idE) {
-        report.setIdE(idE);
+    public ReportBuilder setIdEmployee(int idEmployee) {
+        report.setIdEmployee(idEmployee);
         return this;
     }
 

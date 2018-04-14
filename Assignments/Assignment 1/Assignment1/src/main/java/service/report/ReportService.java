@@ -1,8 +1,13 @@
 package service.report;
 
+import model.Report;
+
 import java.sql.Date;
+import java.util.List;
 
 public interface ReportService {
 
-    boolean addR(int idE, Date date, String activity);
+    boolean addReport(int idEmployee, Date date, String activity);
+
+    List<Report> findAll();
 }

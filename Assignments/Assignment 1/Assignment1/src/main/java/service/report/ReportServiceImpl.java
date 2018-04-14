@@ -1,19 +1,26 @@
 package service.report;
 
-import repository.ReportRepositoryMySQL;
+import model.Report;
+import repository.Report.ReportRepository;
 
 import java.sql.Date;
+import java.util.List;
 
 public class ReportServiceImpl implements ReportService{
 
-    private ReportRepositoryMySQL reportRepositoryMySQL;
+    private ReportRepository reportRepository;
 
-    public ReportServiceImpl(ReportRepositoryMySQL reportRepositoryMySQL) {
-        this.reportRepositoryMySQL = reportRepositoryMySQL;
+    public ReportServiceImpl(ReportRepository reportRepository) {
+        this.reportRepository = reportRepository;
     }
 
     @Override
-    public boolean addR(int idE, Date date, String activity) {
-        return reportRepositoryMySQL.addR(idE, date, activity);
+    public boolean addReport(int idEmployee, Date date, String activity) {
+        return reportRepository.addReport(idEmployee, date, activity);
+    }
+
+    @Override
+    public List<Report> findAll() {
+        return reportRepository.findAll();
     }
 }

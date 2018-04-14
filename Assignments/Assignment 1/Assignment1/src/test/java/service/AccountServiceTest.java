@@ -6,8 +6,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import repository.EntityNotFoundException;
+import repository.account.AccountRepository;
 import repository.account.AccountRepositoryMySQL;
+import repository.client.ClientRepository;
 import repository.client.ClientRepositoryMySQL;
+import service.account.AccountService;
 import service.account.AccountServiceImpl;
 import service.client.ClientService;
 import service.client.ClientServiceImpl;
@@ -20,10 +23,10 @@ import static org.junit.Assert.assertEquals;
 
 public class AccountServiceTest {
 
-    private static AccountServiceImpl accountService;
+    private static AccountService accountService;
     private static ClientService clientService;
-    private static AccountRepositoryMySQL accountRepository;
-    private static ClientRepositoryMySQL clientRepository;
+    private static AccountRepository accountRepository;
+    private static ClientRepository clientRepository;
 
     @BeforeClass
     public static void setup() {

@@ -11,7 +11,7 @@ public class SQLTableCreationFactory {
             case REPORT:
                 return "CREATE TABLE IF NOT EXISTS report (" +
                         "  id int(11) NOT NULL AUTO_INCREMENT," +
-                        "  idE int(15) NOT NULL," +
+                        "  idEmployee int(15) NOT NULL," +
                         "  date datetime NULL," +
                         "  activity varchar(500) NOT NULL," +
                         "  PRIMARY KEY (id)," +

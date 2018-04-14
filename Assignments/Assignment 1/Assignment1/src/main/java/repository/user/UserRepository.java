@@ -16,7 +16,7 @@ public interface UserRepository {
 
     boolean update(User user);
 
-    void remove(int id);
+    boolean remove(int id);
 
     void removeAll();
 }

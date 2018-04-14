@@ -5,7 +5,7 @@ import java.sql.Date;
 public class Report {
 
     private int id;
-    private int idE;
+    private int idEmployee;
     private Date date;
     private String activity;
 
@@ -17,12 +17,12 @@ public class Report {
         this.id = id;
     }
 
-    public int getIdE() {
-        return idE;
+    public int getIdEmployee() {
+        return idEmployee;
     }
 
-    public void setIdE(int idE) {
-        this.idE = idE;
+    public void setIdEmployee(int idEmployee) {
+        this.idEmployee = idEmployee;
     }
 
     public Date getDate() {

@@ -3,16 +3,16 @@ package service.client;
 import model.Client;
 import model.builder.ClientBuilder;
 import repository.EntityNotFoundException;
-import repository.client.ClientRepositoryMySQL;
+import repository.client.ClientRepository;
 
 import java.util.List;
 
 public class ClientServiceImpl implements ClientService {
 
-    private ClientRepositoryMySQL clientRepositoryMySQL;
+    private ClientRepository clientRepository;
 
-    public ClientServiceImpl(ClientRepositoryMySQL clientRepositoryMySQL) {
-        this.clientRepositoryMySQL = clientRepositoryMySQL;
+    public ClientServiceImpl(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class ClientServiceImpl implements ClientService {
                 .setCNP(CNP)
                 .build();
 
-        return clientRepositoryMySQL.update(c);
+        return clientRepository.update(c);
     }
 
     @Override
@@ -37,18 +37,18 @@ public class ClientServiceImpl implements ClientService {
                 .setCNP(CNP)
                 .build();
 
-        return clientRepositoryMySQL.create(c);
+        return clientRepository.create(c);
     }
 
     @Override
     public boolean remove(int id) {
-        return clientRepositoryMySQL.remove(id);
+        return clientRepository.remove(id);
     }
 
     @Override
     public Client findById(int id) {
         try {
-            return clientRepositoryMySQL.findById(id);
+            return clientRepository.findById(id);
         } catch (EntityNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -57,11 +57,11 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public List<Client> findAll() {
-        return clientRepositoryMySQL.findAll();
+        return clientRepository.findAll();
     }
 
     @Override
     public void removeAll() {
-        clientRepositoryMySQL.removeAll();
+        clientRepository.removeAll();
     }
 }

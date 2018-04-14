@@ -43,10 +43,6 @@ public class LoginView extends JFrame{
         return tfPassword.getText();
     }
 
-    public void setAdminButtonListener(ActionListener adminButtonListener) {
-        btnAdmin.addActionListener(adminButtonListener);
-    }
-
     public void setLoginButtonListener(ActionListener loginButtonListener) {
         btnLogin.addActionListener(loginButtonListener);
     }

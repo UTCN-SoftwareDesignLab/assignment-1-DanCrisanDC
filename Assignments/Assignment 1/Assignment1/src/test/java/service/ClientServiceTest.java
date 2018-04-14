@@ -4,7 +4,9 @@ import database.DBConnectionFactory;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import repository.client.ClientRepository;
 import repository.client.ClientRepositoryMySQL;
+import service.client.ClientService;
 import service.client.ClientServiceImpl;
 
 import java.sql.Connection;
@@ -14,8 +16,8 @@ import static org.junit.Assert.assertEquals;
 
 public class ClientServiceTest {
 
-    private static ClientServiceImpl clientService;
-    private static ClientRepositoryMySQL clientRepository;
+    private static ClientService clientService;
+    private static ClientRepository clientRepository;
 
     @BeforeClass
     public static void setup() {

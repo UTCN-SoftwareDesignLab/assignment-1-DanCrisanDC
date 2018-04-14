@@ -12,12 +12,9 @@ import static database.Constants.Tables.USER;
 
 public class UserRepositoryMySQL implements UserRepository{
     private final Connection connection;
-    ///private final RightsRolesRepository rightsRolesRepository;
-
 
     public UserRepositoryMySQL(Connection connection) {
         this.connection = connection;
-        //this.rightsRolesRepository = rightsRolesRepository;
     }
 
     @Override
@@ -51,7 +48,6 @@ public class UserRepositoryMySQL implements UserRepository{
                         .setId(userResultSet.getInt("id"))
                         .setUsername(userResultSet.getString("username"))
                         .setPassword(userResultSet.getString("password"))
-                        //.setRoles(rightsRolesRepository.findRolesForUser(userResultSet.getLong("id")))
                         .build();
                 findByUsernameAndPasswordNotification.setResult(user);
                 return findByUsernameAndPasswordNotification;
@@ -77,7 +73,6 @@ public class UserRepositoryMySQL implements UserRepository{
                         .setId(userResultSet.getInt("id"))
                         .setUsername(userResultSet.getString("username"))
                         .setPassword(userResultSet.getString("password"))
-                        //.setRoles(rightsRolesRepository.findRolesForUser(userResultSet.getLong("id")))
                         .build();
                 findByIdNotification.setResult(user);
                 return findByIdNotification;
@@ -103,8 +98,6 @@ public class UserRepositoryMySQL implements UserRepository{
             ResultSet rs = insertUserStatement.getGeneratedKeys();
             rs.next();
 
-            //rightsRolesRepository.addRolesToUser(user, user.getRoles());
-
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -129,13 +122,15 @@ public class UserRepositoryMySQL implements UserRepository{
     }
 
     @Override
-    public void remove(int id) {
+    public boolean remove(int id) {
         try {
             Statement statement = connection.createStatement();
             String sql = "DELETE from user where id = " + id;
             statement.executeUpdate(sql);
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 

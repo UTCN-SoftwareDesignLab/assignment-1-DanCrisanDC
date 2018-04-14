@@ -3,22 +3,22 @@ package service.account;
 import model.Account;
 import model.builder.AccountBuilder;
 import repository.EntityNotFoundException;
-import repository.account.AccountRepositoryMySQL;
+import repository.account.AccountRepository;
 
 import java.sql.Date;
 import java.util.List;
 
 public class AccountServiceImpl implements AccountService{
 
-    private AccountRepositoryMySQL accountRepositoryMySQL;
+    private AccountRepository accountRepository;
 
-    public AccountServiceImpl(AccountRepositoryMySQL accountRepositoryMySQL) {
-        this.accountRepositoryMySQL = accountRepositoryMySQL;
+    public AccountServiceImpl(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
     }
 
     @Override
     public boolean remove(int id) {
-       return accountRepositoryMySQL.remove(id);
+       return accountRepository.remove(id);
     }
 
 
@@ -33,7 +33,7 @@ public class AccountServiceImpl implements AccountService{
                 .setIdClient(idClient)
                 .build();
 
-        return accountRepositoryMySQL.update(a);
+        return accountRepository.update(a);
     }
 
     @Override
@@ -46,13 +46,13 @@ public class AccountServiceImpl implements AccountService{
                 .setIdClient(idClient)
                 .build();
 
-        return accountRepositoryMySQL.create(account);
+        return accountRepository.create(account);
     }
 
     @Override
     public Account findById(int id) {
         try {
-            return accountRepositoryMySQL.findById(id);
+            return accountRepository.findById(id);
         } catch (EntityNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -61,12 +61,12 @@ public class AccountServiceImpl implements AccountService{
 
     @Override
     public List<Account> findAll() {
-        return accountRepositoryMySQL.findAll();
+        return accountRepository.findAll();
     }
 
     @Override
     public void removeAll() {
-        accountRepositoryMySQL.removeAll();
+        accountRepository.removeAll();
     }
 
 }

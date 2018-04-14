@@ -1,31 +1,26 @@
 package controller;
 
-import database.JDBConnectionWrapper;
 import model.Report;
 import model.User;
 import model.builder.UserBuilder;
-import repository.ReportRepositoryMySQL;
-import repository.user.UserRepository;
-import repository.user.UserRepositoryMySQL;
-import service.user.AdminServices;
-import service.user.AuthenticationServiceMySQL;
+import service.report.ReportService;
+import service.user.AdminService;
+import service.user.AuthenticationService;
 import view.AdminView;
 
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 public class AdminController {
-    private AdminView adminView;
-    private UserRepositoryMySQL userRepository;
-    private AuthenticationServiceMySQL authenticationService;
-    private AdminServices adminServices;
-    private ReportRepositoryMySQL reportRepositoryMySQL;
+    private final AdminView adminView;
+    private final AuthenticationService authenticationService;
+    private final AdminService adminService;
+    private final ReportService reportService;
 
-    public AdminController(AdminView adminView, UserRepositoryMySQL userRepository, AdminServices adminServices, AuthenticationServiceMySQL authenticationServiceMySQL, ReportRepositoryMySQL reportRepositoryMySQL) {
+    public AdminController(AdminView adminView, AdminService adminService, AuthenticationService authenticationService, ReportService reportService) {
 
         this.adminView = adminView;
         this.adminView.setVisible(false);
@@ -35,10 +30,9 @@ public class AdminController {
         adminView.setDeleteButtonListener(new DeleteButtonListener());
         adminView.setReportButtonListener(new ReportButtonListener());
 
-        this.adminServices = adminServices;
-        this.userRepository = userRepository;
-        this.authenticationService = authenticationServiceMySQL;
-        this.reportRepositoryMySQL = reportRepositoryMySQL;
+        this.adminService = adminService;
+        this.authenticationService = authenticationService;
+        this.reportService = reportService;
     }
 
     public void setVisible(boolean b) {
@@ -54,14 +48,14 @@ public class AdminController {
 
             authenticationService.register(username, password);
 
-            updateTable();
+            updateUserTable();
         }
     }
 
     private class ViewButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            updateTable();
+            updateUserTable();
         }
     }
 
@@ -69,21 +63,21 @@ public class AdminController {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            User user = getClicked();
+            User user = getUserFromTable();
             String userText = adminView.getUserField();
             String passText = adminView.getPassField();
 
-            adminServices.update(userText, authenticationService.encodePassword(passText), user.getId());
+            adminService.update(userText, passText, user.getId());
 
-            updateTable();
+            updateUserTable();
         }
     }
 
     private class DeleteButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            userRepository.remove(getClicked().getId());
-            updateTable();
+            adminService.remove(getUserFromTable().getId());
+            updateUserTable();
         }
     }
 
@@ -91,11 +85,11 @@ public class AdminController {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            updateTable2();
+            updateReportTable();
         }
     }
 
-    public User getClicked() {
+    public User getUserFromTable() {
 
         Integer userId = (Integer) adminView.getTableUsers().getValueAt(adminView.getTableUsers().getSelectedRow(),0);
         String username = (String) adminView.getTableUsers().getValueAt(adminView.getTableUsers().getSelectedRow(),1);
@@ -106,20 +100,18 @@ public class AdminController {
                 .setPassword(userpass)
                 .setId(userId)
                 .build();
+
         return u;
     }
 
-    public void updateTable() {
-        Connection connection = new JDBConnectionWrapper("asg1").getConnection();
-        UserRepository ur;
-        ur = new UserRepositoryMySQL(connection);
+    public void updateUserTable() {
 
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("ID");
         model.addColumn("username");
         model.addColumn("password");
 
-        for (User u : ur.findAll()) {
+        for (User u : adminService.findAll()) {
             Object[] o = { u.getId(), u.getUsername(), u.getPassword()};
             model.addRow(o);
         }
@@ -127,8 +119,7 @@ public class AdminController {
         adminView.getTableUsers().setModel(model);
     }
 
-    public void updateTable2() {
-        Connection connection = new JDBConnectionWrapper("asg1").getConnection();
+    public void updateReportTable() {
 
         DefaultTableModel model2  = new DefaultTableModel();
         model2.addColumn("id");
@@ -136,13 +127,11 @@ public class AdminController {
         model2.addColumn("date");
         model2.addColumn("activity");
 
-        ReportRepositoryMySQL r;
-        r = new ReportRepositoryMySQL(connection);
         for (
-                Report report : r.findAll()) {
+                Report report : reportService.findAll()) {
             try {
                 if(report.getDate().after(new SimpleDateFormat("yy-MM-dd").parse(adminView.getFromField())) && report.getDate().before(new SimpleDateFormat("yy-MM-dd").parse(adminView.getUntilField()))) {
-                    Object[] o = {report.getId(), report.getIdE(), report.getDate(), report.getActivity()};
+                    Object[] o = {report.getId(), report.getIdEmployee(), report.getDate(), report.getActivity()};
                     model2.addRow(o);
                 }
             } catch (ParseException e) {
