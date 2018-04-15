@@ -2,6 +2,9 @@ package service.account;
 
 import model.Account;
 import model.builder.AccountBuilder;
+import model.validation.AccountValidator;
+import model.validation.Notification;
+import model.validation.Validator;
 import repository.EntityNotFoundException;
 import repository.account.AccountRepository;
 
@@ -37,7 +40,8 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public boolean create(long cardNo, String type, int amount, Date date, int idClient) {
+    public Notification<Boolean> create(long cardNo, String type, int amount, Date date, int idClient) {
+
         Account account = new AccountBuilder()
                 .setIdNo(cardNo)
                 .setType(type)
@@ -46,7 +50,18 @@ public class AccountServiceImpl implements AccountService{
                 .setIdClient(idClient)
                 .build();
 
-        return accountRepository.create(account);
+        Validator accountValidator = new AccountValidator(account);
+        boolean accountValid = accountValidator.validate();
+        Notification<Boolean> accountNotification = new Notification<>();
+
+        if(!accountValid) {
+            accountValidator.getErrors().forEach(accountNotification::addError);
+            accountNotification.setResult(Boolean.FALSE);
+        }
+        else
+            accountNotification.setResult(accountRepository.create(account));
+
+        return accountNotification;
     }
 
     @Override

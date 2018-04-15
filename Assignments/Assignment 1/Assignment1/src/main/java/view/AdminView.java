@@ -3,7 +3,7 @@ package view;
 import database.JDBConnectionWrapper;
 import model.Report;
 import model.User;
-import repository.Report.ReportRepositoryMySQL;
+import repository.report.ReportRepositoryMySQL;
 import repository.user.UserRepository;
 import repository.user.UserRepositoryMySQL;
 
@@ -68,7 +68,7 @@ public class AdminView extends JFrame {
         btnUpdate.setBounds(20, 260, 100, 100);
         btnDelete = new JButton("Delete");
         btnDelete.setBounds(20, 380, 100, 100);
-        btnReport = new JButton("Generate Report");
+        btnReport = new JButton("Generate report");
         btnReport.setBounds(20, 520, 150, 50);
 
         userTxt = new JTextField("username");

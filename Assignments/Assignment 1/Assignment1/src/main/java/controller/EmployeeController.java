@@ -4,11 +4,13 @@ import model.Account;
 import model.Client;
 import model.builder.AccountBuilder;
 import model.builder.ClientBuilder;
+import model.validation.Notification;
 import service.account.AccountService;
 import service.client.ClientService;
 import service.report.ReportService;
 import view.EmployeeView;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +38,9 @@ public class EmployeeController {
 
         employeeView.setTransferButtonListener(new TransferButtonListener());
         employeeView.setBillButtonListener(new BillButtonListener());
+
+        employeeView.setGetAccountButtonListener(new getAccountButtonListener());
+        employeeView.setGetClientButtonListener(new getClientButtonListener());
 
         this.accountService = accountService;
         this.clientService = clientService;
@@ -65,11 +70,21 @@ public class EmployeeController {
             String date = employeeView.getDateTxt();
             String clientId = employeeView.getIdClientTxt();
 
-            accountService.create(Long.parseLong(cardNo), type, Integer.parseInt(amount), null, Integer.parseInt(clientId));
+            Notification<Boolean> accountNotification = accountService.create(Long.parseLong(cardNo), type, Integer.parseInt(amount), null, Integer.parseInt(clientId));
 
-            updateAccountTable();
-
-            reportService.addReport(getIdEmployee(), new Date(System.currentTimeMillis()), "Created account.");
+            if (accountNotification.hasErrors()) {
+                JOptionPane.showMessageDialog(employeeView.getContentPane(), accountNotification.getFormattedErrors());
+            }
+            else {
+                if (!accountNotification.getResult()) {
+                    JOptionPane.showMessageDialog(employeeView.getContentPane(), "Account creation failed");
+                }
+                else {
+                    JOptionPane.showMessageDialog(employeeView.getContentPane(), "Account created");
+                    updateAccountTable();
+                    reportService.addReport(getIdEmployee(), new Date(System.currentTimeMillis()), "Created account.");
+                }
+            }
         }
     }
 
@@ -109,11 +124,21 @@ public class EmployeeController {
             String address = employeeView.getAddressTxt();
             String CNP = employeeView.getCNPTxt();
 
-            clientService.create(name, Long.parseLong(cardId), address, CNP);
+            Notification<Boolean> clientNotification = clientService.create(name, Long.parseLong(cardId), address, CNP);
 
-            updateClientTable();
-
-            reportService.addReport(getIdEmployee(), new Date(System.currentTimeMillis()), "Created client.");
+            if (clientNotification.hasErrors()) {
+                JOptionPane.showMessageDialog(employeeView.getContentPane(), clientNotification.getFormattedErrors());
+            }
+            else {
+                if (!clientNotification.getResult()) {
+                    JOptionPane.showMessageDialog(employeeView.getContentPane(), "Client creation failed");
+                }
+                else {
+                    JOptionPane.showMessageDialog(employeeView.getContentPane(), "Client created");
+                    updateClientTable();
+                    reportService.addReport(getIdEmployee(), new Date(System.currentTimeMillis()), "Created client");
+                }
+            }
         }
     }
 
@@ -182,6 +207,33 @@ public class EmployeeController {
         }
     }
 
+    private class getAccountButtonListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            Account account = getAccountFromTable();
+
+            employeeView.setAmountTxt(Integer.toString(account.getAmount()));
+            employeeView.setTypeTxt(account.getType());
+            employeeView.setIdNoTxt(Long.toString(account.getIdNo()));
+            employeeView.setIdClientTxt(Integer.toString(account.getIdClient()));
+        }
+    }
+
+    private class getClientButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            Client client = getClientFromTable();
+
+            employeeView.setNameTxt(client.getName());
+            employeeView.setIdCardTxt(Long.toString(client.getIdCardNo()));
+            employeeView.setAddressTxt(client.getAddress());
+            employeeView.setCNPTxt(client.getCNP());
+        }
+    }
+
     public Client getClientFromTable() {
 
         Integer id = (Integer) employeeView.getTableClients().getValueAt(employeeView.getTableClients().getSelectedRow(),0);
@@ -197,6 +249,7 @@ public class EmployeeController {
                 .setAddress(address)
                 .setCNP(CNP)
                 .build();
+
         return c;
     }
 

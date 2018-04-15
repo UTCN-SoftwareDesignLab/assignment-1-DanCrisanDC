@@ -37,4 +37,6 @@ public class AdminServiceImpl implements AdminService {
     public boolean remove(int id) {
         return userRepository.remove(id);
     }
+
+
 }

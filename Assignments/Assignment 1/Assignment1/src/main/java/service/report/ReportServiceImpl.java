@@ -1,7 +1,7 @@
 package service.report;
 
 import model.Report;
-import repository.Report.ReportRepository;
+import repository.report.ReportRepository;
 
 import java.sql.Date;
 import java.util.List;

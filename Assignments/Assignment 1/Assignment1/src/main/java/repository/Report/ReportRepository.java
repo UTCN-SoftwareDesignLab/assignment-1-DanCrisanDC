@@ -1,4 +1,4 @@
-package repository.Report;
+package repository.report;
 
 import model.Report;
 

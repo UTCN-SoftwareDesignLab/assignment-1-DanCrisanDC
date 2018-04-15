@@ -25,6 +25,9 @@ public class EmployeeView extends JFrame{
     private JButton btnTransfer;
     private JButton btnBill;
 
+    private JButton btnGetClient;
+    private JButton btnGetAccount;
+
     private JTextField nameTxt;
     private JTextField idCardTxt;
     private JTextField addressTxt;
@@ -62,6 +65,8 @@ public class EmployeeView extends JFrame{
         add(btnDeleteClient);
         add(btnTransfer);
         add(btnBill);
+        add(btnGetClient);
+        add(btnGetAccount);
         add(nameTxt);
         add(idCardTxt);
         add(addressTxt);
@@ -103,6 +108,12 @@ public class EmployeeView extends JFrame{
         btnBill = new JButton("Process bill");
         btnBill.setBounds(450, 730, 120, 50);
 
+        btnGetClient = new JButton("Get client");
+        btnGetClient.setBounds(600, 300, 150, 50);
+
+        btnGetAccount = new JButton("Get account");
+        btnGetAccount.setBounds(600, 730, 150, 50);
+
         nameTxt = new JTextField("name");
         nameTxt.setBounds(600, 20, 200, 40);
         idCardTxt = new JTextField("card ID");
@@ -131,7 +142,7 @@ public class EmployeeView extends JFrame{
         sumTxt.setBounds(270, 730, 100, 50);
 
         processTxt = new JTextField("to pay");
-        processTxt.setBounds(600, 730, 100, 50);
+        processTxt.setBounds(450, 790, 100, 50);
 
         // table for accounts
         scrollPane = new JScrollPane();
@@ -179,6 +190,42 @@ public class EmployeeView extends JFrame{
         tableClients = new JTable();
         tableClients.setModel(model2);
         scrollPane2.setViewportView(tableClients);
+    }
+
+    public void setNameTxt(String name) {
+        nameTxt.setText(name);
+    }
+
+    public void setIdCardTxt(String idCard) {
+        idCardTxt.setText(idCard);
+    }
+
+    public void setAddressTxt(String address) {
+        addressTxt.setText(address);
+    }
+
+    public void setCNPTxt(String CNP) {
+        CNPTxt.setText(CNP);
+    }
+
+    public void setIdNoTxt(String idNo) {
+        idNoTxt.setText(idNo);
+    }
+
+    public void setTypeTxt(String type) {
+        typeTxt.setText(type);
+    }
+
+    public void setAmountTxt(String amount) {
+        amountTxt.setText(amount);
+    }
+
+    public void setDateTxt(String date) {
+        dateTxt.setText(date);
+    }
+
+    public void setIdClientTxt(String idClient) {
+        idClientTxt.setText(idClient);
     }
 
     public String getNameTxt() {
@@ -263,6 +310,14 @@ public class EmployeeView extends JFrame{
 
     public void setBillButtonListener(ActionListener billButtonListener) {
         btnBill.addActionListener(billButtonListener);
+    }
+
+    public void setGetClientButtonListener(ActionListener getClientButtonListener) {
+        btnGetClient.addActionListener(getClientButtonListener);
+    }
+
+    public void setGetAccountButtonListener(ActionListener getAccountButtonListener) {
+        btnGetAccount.addActionListener(getAccountButtonListener);
     }
 
     public DefaultTableModel getModel() {

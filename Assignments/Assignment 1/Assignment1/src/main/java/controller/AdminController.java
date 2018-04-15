@@ -3,11 +3,13 @@ package controller;
 import model.Report;
 import model.User;
 import model.builder.UserBuilder;
+import model.validation.Notification;
 import service.report.ReportService;
 import service.user.AdminService;
 import service.user.AuthenticationService;
 import view.AdminView;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,9 +48,12 @@ public class AdminController {
             String username = adminView.getUserField();
             String password = adminView.getPassField();
 
-            authenticationService.register(username, password);
+            Notification<Boolean> clientNotification = authenticationService.register(username, password);
 
-            updateUserTable();
+            if(clientNotification.hasErrors())
+                JOptionPane.showMessageDialog(adminView.getContentPane(), clientNotification.getFormattedErrors());
+            else
+                updateUserTable();
         }
     }
 

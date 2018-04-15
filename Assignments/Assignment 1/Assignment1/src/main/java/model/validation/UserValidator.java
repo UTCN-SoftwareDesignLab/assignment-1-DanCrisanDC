@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class UserValidator {
+public class UserValidator implements Validator{
 
     private static final String USER_VALIDATION_REGEX = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+$";
     private static final int MIN_PASSWORD_LENGTH = 8;

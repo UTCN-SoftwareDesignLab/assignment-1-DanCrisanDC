@@ -1,14 +1,14 @@
 package repository.client;
 
 import model.Client;
-import repository.EntityNotFoundException;
+import model.validation.Notification;
 
 import java.util.List;
 
 public interface ClientRepository {
     List<Client> findAll();
 
-    Client findById(int id) throws EntityNotFoundException;
+    Notification<Client> findById(int id);
 
     boolean create(Client client);
 

@@ -2,7 +2,7 @@ package repository.client;
 
 import model.Client;
 import model.builder.ClientBuilder;
-import repository.EntityNotFoundException;
+import model.validation.Notification;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -34,25 +34,30 @@ public class ClientRepositoryMySQL implements ClientRepository{
     }
 
     @Override
-    public Client findById(int id) throws EntityNotFoundException {
+    public Notification<Client> findById(int id) {
+
+        Notification<Client> clientNotification = new Notification<>();
+
         try {
             Statement statement = connection.createStatement();
             String sql = "Select * from client where id=" + id;
             ResultSet rs = statement.executeQuery(sql);
 
             if (rs.next()) {
-                return getClientFromResultSet(rs);
+                clientNotification.setResult(getClientFromResultSet(rs));
             } else {
-                throw new EntityNotFoundException(id, Client.class.getSimpleName());
+                clientNotification.addError("Client with " + id + " was not found");
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new EntityNotFoundException(id, Client.class.getSimpleName());
+            clientNotification.addError("Database did not respond accordingly");
         }
+        return clientNotification;
     }
 
     @Override
     public boolean create(Client client) {
+
         try {
             PreparedStatement insertStatement = connection
                     .prepareStatement("INSERT INTO client values (null, ?, ?, ?, ?)");
@@ -61,7 +66,9 @@ public class ClientRepositoryMySQL implements ClientRepository{
             insertStatement.setString(3, client.getAddress());
             insertStatement.setString(4, client.getCNP());
             insertStatement.executeUpdate();
+
             return true;
+
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
